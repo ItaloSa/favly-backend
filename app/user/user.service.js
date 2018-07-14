@@ -4,7 +4,8 @@ const consts = require('../consts');
 module.exports = {
     createUser,
     loadUser,
-    addRepositories,
+    addRepository,
+    delRepository,
 }
 
 function createUser() {
@@ -34,17 +35,40 @@ function loadUser(userId) {
     });
 }
 
-function addRepositories(userId, repositories) {
+function addRepository(userId, repository) {
     return new Promise((resolve, reject) => {
         loadUser(userId)
             .then((user) => {
-
-                for (let i = 0; i < repositories.length; i++) {
-                    user.repositories.push(repositories[i]);
-                }
-
+                
+                user.repositories.push(repository);
+                
                 user.save((err, updatedUser) => {
                     if (err) {
+                        console.log(err);
+                        reject(consts.ERR_UPDATE_USER);
+                    } else {
+                        resolve(updatedUser);
+                    }
+                });
+            })
+            .catch(() => {
+                reject(consts.ERR_LOAD_USER);
+            });
+    });
+}
+
+function delRepository(userId, repositoryId) {
+    return new Promise((resolve, reject) => {
+        loadUser(userId)
+            .then((user) => {
+                let updatedRepositories = user.repositories.filter((repository) => {
+                    return repositoryId != repository.id;
+                });
+                console.log(updatedRepositories);
+                user.repositories = updatedRepositories;
+                user.save((err, updatedUser) => {
+                    if (err) {
+                        console.log(err);
                         reject(consts.ERR_UPDATE_USER);
                     } else {
                         resolve(updatedUser);

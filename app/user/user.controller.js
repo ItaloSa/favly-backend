@@ -3,7 +3,8 @@ const userService = require('./user.service');
 module.exports = {
     createUser,
     loadUser,
-    addRepositories,
+    addRepository,
+    delRepository,
 }
 
 function createUser(req, res) {
@@ -35,19 +36,36 @@ function loadUser(req, res) {
         });
 }
 
-function addRepositories(req, res) {
+function addRepository(req, res) {
     let userId = req.params.userId;
-    let repositories = req.body.repositories;
+    let repository = req.body.repository;
 
-    userService.addRepositories(userId, repositories)
+    userService.addRepository(userId, repository)
         .then((updatedUser) => {
             res
                 .status(200)
-                .json({user: updatedUser});
+                .json({updatedUser});
         })
         .catch((errCode) => {
             res
                 .status(400)
-                .json({message: `Can't update user`, errorCode: errCode});
+                .json({message: `Can't insert repository`, errorCode: errCode});
+        });
+}
+
+function delRepository(req, res) {
+    let userId = req.params.userId;
+    let repositoryId = req.body.repositoryId;
+
+    userService.delRepository(userId, repositoryId)
+        .then((updatedUser) => {
+            res
+                .status(200)
+                .json({updatedUser});
+        })
+        .catch((errCode) => {
+            res
+                .status(400)
+                .json({message: `Can't remove repository`, errorCode: errCode});
         });
 }
