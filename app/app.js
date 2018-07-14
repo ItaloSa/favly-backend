@@ -1,27 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors')({origin: true});
-const mongoose = require('mongoose');
+const DataBase = require('./mongo.config');
+
+const UserRouter = require('./user/user.router');
 
 const app = express();
 const jsonParser = bodyParser.json();
 
 const PORT = process.env.PORT;
-const MONGO_URI = process.env.MONGO_URI;
+
+DataBase.Run();
 
 app.use(cors);
 app.use(jsonParser);
-
-mongoose.connect(MONGO_URI);
-
-mongoose.connection.on('error', () => {
-    console.log('Could not connect to the database. Exiting now...');
-    process.exit();
-});
-
-mongoose.connection.once('open', () => {
-    console.log("Successfully connected to the database");
-});
+app.use('/user', UserRouter.User);
 
 app.get('/', (req, res) => {
     res.json({message: 'hello!'});
@@ -29,4 +22,4 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`FavlyBack running on port ${PORT}`);
-})
+});
