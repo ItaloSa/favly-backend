@@ -4,7 +4,7 @@ services:
     image: "node:8"
     container_name: favly-backend
     volumes:
-      - ./app:/app
+      - ./:/app
     ports:
       - 3000:3000
     environment:
