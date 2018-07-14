@@ -1,0 +1,20 @@
+version: '2'
+services:
+  node:
+    image: "node:8"
+    container_name: favly-backend
+    volumes:
+      - ./app:/app
+    ports:
+      - 3000:3000
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://mongo:27017
+    links:
+      - mongo
+    command: bash -c "cd /app; npm install; node index.js"
+  mongo:
+    container_name: favly-database
+    image: mongo
+    ports:
+      - "27017:27017"
