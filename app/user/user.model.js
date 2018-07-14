@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    repositories: [String],
+    repositories: [Schema.Types.Mixed],
 }, {
     timestamps: true,
 });
